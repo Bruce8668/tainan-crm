@@ -1,9 +1,9 @@
-FROM node:22-alpine AS builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package.json ./
-RUN npm install
+RUN npm install --no-optional
 COPY . .
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
